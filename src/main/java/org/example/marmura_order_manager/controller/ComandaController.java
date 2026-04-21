@@ -17,6 +17,7 @@ public class ComandaController {
         return comandaService.creareComanda(comanda);
     }
 
+
     @GetMapping
     public List<Comanda> getComenzi(){
         return comandaService.getComenzi();

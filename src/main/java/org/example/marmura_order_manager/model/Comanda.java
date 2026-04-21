@@ -79,4 +79,7 @@ public class Comanda {
         this.client = client;
         this.observatii = observatii;
     }
+    public void setLinii(List<LinieComanda> linii) {
+        this.linii = linii;
+    }
 }

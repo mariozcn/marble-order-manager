@@ -8,6 +8,7 @@ import org.example.marmura_order_manager.repository.ComandaRepository;
 import org.example.marmura_order_manager.repository.LinieComandaRepository;
 import org.example.marmura_order_manager.repository.MaterialRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.time.LocalDate;
@@ -32,11 +33,17 @@ public class ComandaService {
 
     public double calculPretCant(LinieComandaDTO linieComandaDTO){
         double suprafata = 0;
-        if(linieComandaDTO.isCantStanga())  suprafata += linieComandaDTO.getLatime() / 100.0;
-        if(linieComandaDTO.isCantDreapta()) suprafata += linieComandaDTO.getLatime() / 100.0;
-        if(linieComandaDTO.isCantSus())     suprafata += linieComandaDTO.getLungime() / 100.0;
-        if(linieComandaDTO.isCantJos())     suprafata += linieComandaDTO.getLungime() / 100.0;
+        if(linieComandaDTO.isCantStanga())  suprafata += linieComandaDTO.getLatime()   / 100.0;
+        if(linieComandaDTO.isCantDreapta()) suprafata += linieComandaDTO.getLatime()   / 100.0;
+        if(linieComandaDTO.isCantSus())     suprafata += linieComandaDTO.getLungime()  / 100.0;
+        if(linieComandaDTO.isCantJos())     suprafata += linieComandaDTO.getLungime()  / 100.0;
         return suprafata * 40;
+    }
+
+    public Comanda updateComanda(Long id, Status status){
+        Comanda comanda = comandaRepository.findById(id).orElseThrow();
+        comanda.setStatus(status);
+        return comandaRepository.save(comanda);
     }
 
     @Transactional

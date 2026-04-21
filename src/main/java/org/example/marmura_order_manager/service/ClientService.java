@@ -24,7 +24,4 @@ public class ClientService {
     public List<Client> totiClientii(){
         return clientRepository.findAll();
     }
-
-
-
 }

@@ -2,6 +2,7 @@ package org.example.marmura_order_manager.controller;
 
 import org.example.marmura_order_manager.dto.ComandaDTO;
 import org.example.marmura_order_manager.model.Comanda;
+import org.example.marmura_order_manager.model.Status;
 import org.example.marmura_order_manager.service.ComandaService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,10 @@ public class ComandaController {
         return comandaService.creareComanda(comanda);
     }
 
+    @PutMapping("/{id}/status")
+    public Comanda updateComanda(@PathVariable Long id,@RequestBody Status status){
+        return comandaService.updateComanda(id,status);
+    }
 
     @GetMapping
     public List<Comanda> getComenzi(){

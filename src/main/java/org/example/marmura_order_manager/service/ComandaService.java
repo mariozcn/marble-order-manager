@@ -22,8 +22,7 @@ public class ComandaService {
     private final LinieComandaRepository linieComandaRepository;
     private final MaterialRepository materialRepository;
 
-    public double calcularePret(LinieComandaDTO linieComandaDTO){
-        System.out.println("Caut material: '" + linieComandaDTO.getMaterial() + "' grosime: " + linieComandaDTO.getGrosime());
+    public double calcularePret(LinieComandaDTO linieComandaDTO){linieComandaDTO.getGrosime());
 
         Material material = materialRepository.findByNameAndGrosime(linieComandaDTO.getMaterial(),
                 linieComandaDTO.getGrosime()).orElseThrow();

@@ -4,6 +4,7 @@ package org.example.marmura_order_manager.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Comanda {
@@ -13,6 +14,13 @@ public class Comanda {
 
     @Column(name="data_comenzii")
     private LocalDate dataComenzii;
+
+    @OneToMany(mappedBy = "comanda",fetch=FetchType.EAGER)
+    private List<LinieComanda> linii;
+
+    public List<LinieComanda> getLinii() {
+        return linii;
+    }
 
     public Comanda() {
     }

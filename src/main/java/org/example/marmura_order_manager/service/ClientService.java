@@ -21,6 +21,10 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+    public List<Client> cautaClient(String query){
+        return clientRepository.findByTelefonContainingOrNameContaining(query,query);
+    }
+
     public List<Client> totiClientii(){
         return clientRepository.findAll();
     }

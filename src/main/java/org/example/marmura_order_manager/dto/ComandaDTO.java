@@ -3,12 +3,26 @@ package org.example.marmura_order_manager.dto;
 import java.util.List;
 
 public class ComandaDTO {
-    private Long clientId;
+    private Long client_id;
+    private List<LinieComandaDTO> linii;
     private String observatii;
-    private List<LiniiComandaDTO> linii;
+    public ComandaDTO() {
+    }
 
-    public Long getClientId() {
-        return clientId;
+    public Long getClient_id() {
+        return client_id;
+    }
+
+    public void setClient_id(Long client_id) {
+        this.client_id = client_id;
+    }
+
+    public List<LinieComandaDTO> getLinii() {
+        return linii;
+    }
+
+    public void setLinii(List<LinieComandaDTO> linii) {
+        this.linii = linii;
     }
 
     public String getObservatii() {
@@ -19,19 +33,8 @@ public class ComandaDTO {
         this.observatii = observatii;
     }
 
-    public List<LiniiComandaDTO> getLinii() {
-        return linii;
-    }
-
-    public void setLinii(List<LiniiComandaDTO> linii) {
-        this.linii = linii;
-    }
-
-    public ComandaDTO() {
-    }
-
-    public ComandaDTO(Long clientId, String observatii, List<LiniiComandaDTO> linii) {
-        this.clientId = clientId;
+    public ComandaDTO(Long client_id, String observatii, List<LinieComandaDTO> linii) {
+        this.client_id = client_id;
         this.observatii = observatii;
         this.linii = linii;
     }

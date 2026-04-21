@@ -1,57 +1,60 @@
 package org.example.marmura_order_manager.service;
-
 import org.example.marmura_order_manager.dto.ComandaDTO;
-import org.example.marmura_order_manager.dto.LiniiComandaDTO;
-import org.example.marmura_order_manager.model.Client;
+import org.example.marmura_order_manager.dto.LinieComandaDTO;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.model.LinieComanda;
 import org.example.marmura_order_manager.model.Status;
-import org.example.marmura_order_manager.repository.ComandaRepository;
-import org.example.marmura_order_manager.repository.LiniiComandaRepository;
-import org.springframework.stereotype.Service;
 import org.example.marmura_order_manager.repository.ClientRepository;
+import org.example.marmura_order_manager.repository.ComandaRepository;
+import org.example.marmura_order_manager.repository.LinieComandaRepository;
+import org.springframework.stereotype.Service;
+
+
 import java.time.LocalDate;
+
 
 @Service
 public class ComandaService {
-    private final ComandaRepository comandaRepository;
-    private final LiniiComandaRepository liniiComandaRepository;
     private final ClientRepository clientRepository;
+    private final ComandaRepository comandaRepository;
+    private final LinieComandaRepository linieComandaRepository;
 
 
-    public Comanda salveazaComanda(ComandaDTO dto){
-        Client client = clientRepository.findById(dto.getClientId()).orElseThrow();
+    public Comanda creareComanda(ComandaDTO comandaDTO){
         Comanda comanda = new Comanda();
-
-        comanda.setClient(client);
-        comanda.setObservatii(dto.getObservatii());
-        comanda.setDataComenzii(LocalDate.now());
+        comanda.setObservatii(comandaDTO.getObservatii());
         comanda.setStatus(Status.Noua);
-
-        for(LiniiComandaDTO liniiComandaDTO : dto.getLinii()){
+        comanda.setDataComenzii(LocalDate.now());
+        comanda.setClient(clientRepository.findById(comandaDTO.getClient_id()).orElseThrow());
+        comandaRepository.save(comanda);
+        for(LinieComandaDTO linieComandaDTO : comandaDTO.getLinii()) {
             LinieComanda linieComanda = new LinieComanda();
             linieComanda.setComanda(comanda);
-            linieComanda.setCant(liniiComandaDTO.getCant());
-            linieComanda.setGrosime(liniiComandaDTO.getGrosime());
-            linieComanda.setLatime(liniiComandaDTO.getLatime());
-            linieComanda.setLungime(liniiComandaDTO.getLungime());
-            linieComanda.setMaterial(liniiComandaDTO.getMaterial());
-            linieComanda.setPret(liniiComandaDTO.getPret());
+            linieComanda.setCant(linieComandaDTO.getCant());
+            linieComanda.setLatime(linieComandaDTO.getLatime());
+            linieComanda.setGrosime(linieComandaDTO.getGrosime());
+            linieComanda.setLungime(linieComandaDTO.getLungime());
+            linieComanda.setMaterial(linieComandaDTO.getMaterial());
+            linieComanda.setPret(linieComandaDTO.getPret());
 
-            liniiComandaRepository.save(linieComanda);
+            linieComandaRepository.save(linieComanda);
         }
-
-
-        return comandaRepository.save(comanda);
+           return comanda;
     }
 
 
 
 
 
-    public ComandaService(ComandaRepository comandaRepository, LiniiComandaRepository liniiComandaRepository, ClientRepository clientRepository) {
-        this.comandaRepository = comandaRepository;
-        this.liniiComandaRepository = liniiComandaRepository;
+
+
+
+
+
+    public ComandaService(ClientRepository clientRepository, ComandaRepository comandaRepository, LinieComandaRepository linieComandaRepository) {
         this.clientRepository = clientRepository;
+        this.comandaRepository = comandaRepository;
+        this.linieComandaRepository = linieComandaRepository;
     }
+
 }

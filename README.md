@@ -35,4 +35,4 @@ DATABASE_PASSWORD=your_password
 5. Access at `http://localhost:8081/api/comenzi/pagina`
 
 ## Live Demo
-[marmura-order-manager-production.up.railway.app](https://marmura-order-manager-production.up.railway.app/api/comenzi/pagina)
+[marmura-order-manager-production.up.railway.app](https://oction.up.railway.app/api/comenzi/pagina)

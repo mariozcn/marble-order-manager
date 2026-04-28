@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalii Comanda</title>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-brand">Marble Manager</span>
+    <div>
+        <a href="/api/clienti/pagina" class="btn btn-outline-light btn-sm me-2">Clienti</a>
+        <a href="/api/comenzi/pagina" class="btn btn-outline-light btn-sm me-2">Comenzi</a>
+        <a href="/api/materiale/pagina" class="btn btn-outline-light btn-sm">Materiale</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <a href="/api/comenzi/pagina" class="btn btn-secondary mb-3">Inapoi</a>
+
+    <h2>Detalii Comanda #<span th:text="${comanda.id}"></span></h2>
+
+    <!-- DATE CLIENT -->
+    <div class="card p-3 mb-3">
+        <h5>Client</h5>
+        <p><strong>Nume:</strong> <span th:text="${comanda.client.name}"></span></p>
+        <p><strong>Telefon:</strong> <span th:text="${comanda.client.telefon}"></span></p>
+    </div>
+
+    <!-- STATUS -->
+    <div class="card p-3 mb-3">
+        <h5>Status</h5>
+        <span th:text="${comanda.status}" class="badge bg-primary fs-6"></span>
+        <div class="mt-2">
+            <a th:href="@{/api/comenzi/{id}/status/InLucru(id=${comanda.id})}"
+               class="btn btn-warning btn-sm me-1">In Lucru</a>
+            <a th:href="@{/api/comenzi/{id}/status/Gata(id=${comanda.id})}"
+               class="btn btn-success btn-sm me-1">Gata</a>
+            <a th:href="@{/api/comenzi/{id}/status/Ridicata(id=${comanda.id})}"
+               class="btn btn-secondary btn-sm">Ridicata</a>
+        </div>
+    </div>
+
+    <!-- OBSERVATII -->
+    <div class="card p-3 mb-3" th:if="${comanda.observatii != null and !comanda.observatii.isEmpty()}">
+        <h5>Observatii</h5>
+        <p th:text="${comanda.observatii}"></p>
+    </div>
+
+    <!-- LINII COMANDA -->
+    <div class="card p-3 mb-3">
+        <h5>Linii Comanda</h5>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Material</th>
+                <th>Lungime (cm)</th>
+                <th>Latime (cm)</th>
+                <th>Grosime (cm)</th>
+                <th>Cant</th>
+                <th>Laturi</th>
+                <th>Colturi</th>
+                <th>Pret</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="linie : ${comanda.linii}">
+                <td th:text="${linie.material}"></td>
+                <td th:text="${linie.lungime}"></td>
+                <td th:text="${linie.latime}"></td>
+                <td th:text="${linie.grosime}"></td>
+                <td th:text="${linie.cant}"></td>
+                <td>
+                    <span th:if="${linie.cantStanga}">Stanga </span>
+                    <span th:if="${linie.cantDreapta}">Dreapta </span>
+                    <span th:if="${linie.cantSus}">Sus </span>
+                    <span th:if="${linie.cantJos}">Jos</span>
+                </td>
+                <td>
+                    <span th:if="${linie.coltSusStanga}">Sus-Stanga </span>
+                    <span th:if="${linie.coltSusDreapta}">Sus-Dreapta </span>
+                    <span th:if="${linie.coltJosStanga}">Jos-Stanga </span>
+                    <span th:if="${linie.coltJosDreapta}">Jos-Dreapta</span>
+                </td>
+                <td th:text="${linie.pret}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- TOTAL -->
+        <h5 class="text-end">
+            Total:
+            <span th:text="${#aggregates.sum(comanda.linii.![pret])}"></span> RON
+        </h5>
+    </div>
+</div>
+</body>
+</html>

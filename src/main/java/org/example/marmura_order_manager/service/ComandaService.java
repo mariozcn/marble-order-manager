@@ -40,6 +40,10 @@ public class ComandaService {
         return suprafata * 40;
     }
 
+    public Comanda getComandaById(Long id){
+        return comandaRepository.findById(id).orElseThrow();
+    }
+
     public Comanda updateComanda(Long id, Status status){
         Comanda comanda = comandaRepository.findById(id).orElseThrow();
         comanda.setStatus(status);

@@ -15,7 +15,7 @@ public class Comanda {
     @Column(name="data_comenzii")
     private LocalDate dataComenzii;
 
-    @OneToMany(mappedBy = "comanda",fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "comanda", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LinieComanda> linii;
 
     public List<LinieComanda> getLinii() {

@@ -1,7 +1,6 @@
 package org.example.marmura_order_manager.controller;
 
 import org.example.marmura_order_manager.model.Material;
-import org.example.marmura_order_manager.service.ComandaService;
 import org.example.marmura_order_manager.service.MaterialService;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,10 @@ public class MaterialController {
         return materialService.createMaterial(material);
     }
 
-
+    @DeleteMapping("/{id}")
+    public void deleteMaterial(@PathVariable Long id){
+        materialService.deleteMaterial(id);
+    }
     public MaterialController(MaterialService materialService) {
         this.materialService = materialService;
     }

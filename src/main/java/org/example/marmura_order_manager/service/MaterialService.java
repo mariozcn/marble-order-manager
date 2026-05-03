@@ -21,4 +21,9 @@ public class MaterialService {
     public MaterialService(MaterialRepository materialRepository) {
         this.materialRepository = materialRepository;
     }
+
+    public void deleteMaterial(Long id){
+        materialRepository.deleteById(id);
+    }
+
 }

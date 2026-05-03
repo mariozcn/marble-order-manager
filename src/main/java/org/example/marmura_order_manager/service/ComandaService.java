@@ -8,7 +8,6 @@ import org.example.marmura_order_manager.repository.ComandaRepository;
 import org.example.marmura_order_manager.repository.LinieComandaRepository;
 import org.example.marmura_order_manager.repository.MaterialRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.time.LocalDate;
@@ -102,5 +101,9 @@ public class ComandaService {
         this.comandaRepository = comandaRepository;
         this.linieComandaRepository = linieComandaRepository;
         this.materialRepository = materialRepository;
+    }
+
+    public void deleteComanda(Long id){
+        comandaRepository.deleteById(id);
     }
 }

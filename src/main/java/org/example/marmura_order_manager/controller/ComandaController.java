@@ -29,6 +29,10 @@ public class ComandaController {
         return comandaService.getComenzi();
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteComanda(@PathVariable Long id){
+        comandaService.deleteComanda(id);
+    }
 
     public ComandaController(ComandaService comandaService) {
         this.comandaService = comandaService;

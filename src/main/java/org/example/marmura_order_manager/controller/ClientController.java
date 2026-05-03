@@ -4,7 +4,6 @@ import org.example.marmura_order_manager.model.Client;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.service.ClientService;
 import org.example.marmura_order_manager.service.ComandaService;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +38,11 @@ public class ClientController {
         return clientService.cautaClient(query);
     }
 
+    //delete request
+    @DeleteMapping("/{id}")
+    public void deleteClient(@PathVariable Long id){
+        clientService.deleteClient(id);
+    }
 
     @PostMapping
     public Client adaugaClient(@RequestBody Client client){

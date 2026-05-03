@@ -5,7 +5,6 @@ import org.example.marmura_order_manager.model.Client;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.repository.ClientRepository;
 import org.example.marmura_order_manager.repository.ComandaRepository;
-import org.example.marmura_order_manager.repository.LinieComandaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends JpaRepository<Client,Long> {
     List<Client> findByTelefonContainingOrNameContaining(String telefon, String name);
+
+    Client findClientById(Long id);
 }

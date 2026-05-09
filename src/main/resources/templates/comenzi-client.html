@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    <title>Comenzi Clienți</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <div th:replace="~{fragments/layout :: header}"></div>
+
+    <div class="max-w-7xl mx-auto px-6 py-8" x-data="{ modalOpen: false }">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Comenzi client</h1>
+        </div>
+
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                <tr>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Itemi</th>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                    <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="tabelComenziClient" class="divide-y divide-gray-200">
+                    <tr th:each="comanda : ${comenzi}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${comanda.dataComenzii}"></td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <span th:switch="${comanda.status.name()}">
+                                <span th:case="'Noua'" class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Nouă</span>
+                                <span th:case="'InLucru'" class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">În Lucru</span>
+                                <span th:case="'Gata'" class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Gata</span>
+                                <span th:case="'Ridicata'" class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">Ridicată</span>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900" th:text="${comanda.linii.size()}"></td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            <span th:text="${#aggregates.sum(comanda.linii.![pret])}"></span> RON
+                        </td>
+                        <td class="px-6 py-4 text-sm">
+                            <button @click="modalOpen = true"
+                                    class="text-blue-600 hover:text-blue-800 mr-3">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                            </button>
+                        <button th:onclick="'deleteComanda(' + ${comanda.id} + ')'"
+                                class="text-red-600 hover:text-red-800 mr-3">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                        <a th:href="@{/api/comenzi/{id}/detalii(id=${comanda.id})}"
+                            class="text-gray-600 hover:text-gray-900 mr-3 inline-block">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div x-show = "modalOpen"
+             x-cloak
+             id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="fixed inset-0 bg-black bg-opacity-50" @click="modalOpen = false"></div>
+
+            <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Modifică</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <input type="text"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/layout :: init-icons}"></div>
+
+<script>
+    async function deleteComanda(id){
+        const confirmare = confirm("Esti sigur ca vrei sa stergi comanda?");
+        if(!confirmare){return;}
+
+        try{
+            const response = await fetch('/api/comenzi/'+id,{
+                method:'DELETE'
+            });
+            if(!response.ok){
+                throw new Error("eroare la stergere");
+            }
+            location.reload();
+        }catch (error){
+            alert('Eroare '+error.message);
+        }
+    }
+</script>
+</body>
+</html>

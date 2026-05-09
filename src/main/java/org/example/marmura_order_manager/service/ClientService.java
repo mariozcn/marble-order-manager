@@ -39,4 +39,10 @@ public class ClientService {
         comandaRepository.deleteAll(comenzi);
         clientRepository.deleteById(id);
     }
+
+    public Client getClientById(Long id){
+        return clientRepository.findClientById(id);
+    }
+
+
 }

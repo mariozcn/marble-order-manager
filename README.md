@@ -11,18 +11,19 @@ material types, and cutting specifications. Papers were often lost or illegible,
 causing errors. This application digitizes the entire process.
 
 ## Features
-- Customer management with search by name or phone
-- Material catalog with price per m²
-- Order creation with multiple lines (slabs, tombstones, etc.)
-- Automatic price calculation based on material + cutting (cant)
+- Dashboard with KPIs, status breakdown, top customers, and recent orders
+- Customer management with search, add, edit, and delete
+- Material catalog (name, type, origin, thickness, price per m²) with full CRUD
+- Order creation with multiple lines, automatic price calculation
 - Cutting specifications per side (left, right, top, bottom) and corners
-- Order status tracking: New → In Progress → Ready → Picked Up
-- Order detail view for workers
+- Order status tracking: New → In Progress → Ready → Picked Up (inline status changes via modal)
+- Detailed order view with line breakdown, totals, and customer info
+- Per-customer order history page
 
 ## Tech Stack
 - **Backend:** Java 17, Spring Boot, Spring Data JPA, Hibernate
 - **Database:** MySQL
-- **Frontend:** Thymeleaf, Bootstrap 5
+- **Frontend:** Thymeleaf, Tailwind CSS, Alpine.js, Lucide icons
 - **Build:** Maven
 - **Deploy:** Railway
 - **CI:** GitHub Actions
@@ -46,7 +47,7 @@ mvn test
    DATABASE_PASSWORD=your_password
 ```
 4. Run with IntelliJ or `mvn spring-boot:run`
-5. Access at `http://localhost:8081/api/clienti/pagina`
+5. Access at `http://localhost:8081/dashboard`
 
 ## Live Demo
-[oction.up.railway.app](https://oction.up.railway.app/api/clienti/pagina)
+[oction.up.railway.app](https://oction.up.railway.app/dashboard)

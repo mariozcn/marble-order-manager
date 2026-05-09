@@ -28,6 +28,11 @@
             <a href="/api/comenzi/comanda-noua" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg">
                 + Comandă Nouă
             </a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">
+                    Logout
+                </button>
+            </form>
 
         </div>
     </div>

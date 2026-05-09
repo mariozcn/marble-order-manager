@@ -9,6 +9,8 @@
 
 **Live demo:** [oction.up.railway.app/dashboard](https://oction.up.railway.app/dashboard)
 
+**Demo credentials** — username: `demo` · password: `demo123`
+
 ---
 
 ## The Problem

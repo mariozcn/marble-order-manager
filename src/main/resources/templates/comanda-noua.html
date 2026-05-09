@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    <title>Comandă Nouă</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<div class="max-w-5xl mx-auto px-6 py-8"
+     x-data="comandaNoua()">
+
+    <div class="flex items-center space-x-3 mb-8">
+        <a href="/api/comenzi/pagina" class="text-gray-500 hover:text-gray-900">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+        </a>
+        <h1 class="text-3xl font-bold text-gray-900">Comandă Nouă</h1>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Detalii</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Client</label>
+                <select x-model="clientId"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">— Alege client —</option>
+                    <option th:each="cli : ${clienti}"
+                            th:value="${cli.id}"
+                            th:text="${cli.name + ' (' + cli.telefon + ')'}"></option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Observații</label>
+                <input type="text" x-model="observatii"
+                       placeholder="opțional"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900">Linii comandă</h2>
+            <button type="button" @click="addLinie()"
+                    class="text-sm font-medium text-blue-600 hover:text-blue-800 inline-flex items-center space-x-1">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Adaugă linie</span>
+            </button>
+        </div>
+
+        <template x-for="(linie, idx) in linii" :key="idx">
+            <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-semibold text-gray-700">
+                        Linia <span x-text="idx + 1"></span>
+                    </span>
+                    <button type="button" @click="removeLinie(idx)"
+                            x-show="linii.length > 1"
+                            class="text-red-600 hover:text-red-800">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Material</label>
+                        <select x-model="linie.materialKey"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">— Alege material —</option>
+                            <option th:each="m : ${materiale}"
+                                    th:value="${m.name + '||' + m.grosime}"
+                                    th:text="${m.name + ' — ' + m.grosime + ' cm' + (m.tipMaterial != null ? ' (' + m.tipMaterial.name() + ')' : '')}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Lungime (cm)</label>
+                        <input type="number" min="0" step="0.1" x-model.number="linie.lungime"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Lățime (cm)</label>
+                        <input type="number" min="0" step="0.1" x-model.number="linie.latime"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Tip cant</label>
+                        <select x-model="linie.cant"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">— Fără cant —</option>
+                            <option value="CU_MASINA">Cu mașina</option>
+                            <option value="LA_ROTUND">La rotund</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <p class="text-xs font-medium text-gray-600 mb-2">Cant pe laturi</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.cantSus" class="rounded text-blue-600">
+                                <span>Sus</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.cantJos" class="rounded text-blue-600">
+                                <span>Jos</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.cantStanga" class="rounded text-blue-600">
+                                <span>Stânga</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.cantDreapta" class="rounded text-blue-600">
+                                <span>Dreapta</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-600 mb-2">Colțuri</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.coltSusStanga" class="rounded text-blue-600">
+                                <span>Sus-Stânga</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.coltSusDreapta" class="rounded text-blue-600">
+                                <span>Sus-Dreapta</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.coltJosStanga" class="rounded text-blue-600">
+                                <span>Jos-Stânga</span>
+                            </label>
+                            <label class="inline-flex items-center space-x-2 text-sm text-gray-700">
+                                <input type="checkbox" x-model="linie.coltJosDreapta" class="rounded text-blue-600">
+                                <span>Jos-Dreapta</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
+        <div class="text-sm text-gray-600">
+            <span x-text="linii.length"></span> <span x-text="linii.length === 1 ? 'linie' : 'linii'"></span>
+        </div>
+        <div class="flex space-x-3">
+            <a href="/api/comenzi/pagina"
+               class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50">
+                Anulează
+            </a>
+            <button type="button" @click="salveaza()" :disabled="saving"
+                    class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium px-4 py-2 rounded-lg">
+                <span x-show="!saving">Salvează comanda</span>
+                <span x-show="saving">Se salvează...</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: init-icons}"></div>
+
+<script>
+    function emptyLinie() {
+        return {
+            materialKey: '',
+            lungime: '',
+            latime: '',
+            cant: '',
+            cantSus: false,
+            cantJos: false,
+            cantStanga: false,
+            cantDreapta: false,
+            coltSusStanga: false,
+            coltSusDreapta: false,
+            coltJosStanga: false,
+            coltJosDreapta: false
+        };
+    }
+
+    function comandaNoua() {
+        return {
+            clientId: '',
+            observatii: '',
+            linii: [emptyLinie()],
+            saving: false,
+
+            addLinie() {
+                this.linii.push(emptyLinie());
+                this.$nextTick(() => lucide.createIcons());
+            },
+            removeLinie(idx) {
+                this.linii.splice(idx, 1);
+                this.$nextTick(() => lucide.createIcons());
+            },
+
+            async salveaza() {
+                if (!this.clientId) {
+                    alert('Selectează un client');
+                    return;
+                }
+                if (this.linii.length === 0) {
+                    alert('Adaugă cel puțin o linie');
+                    return;
+                }
+
+                const liniiPayload = [];
+                for (let i = 0; i < this.linii.length; i++) {
+                    const l = this.linii[i];
+                    if (!l.materialKey) {
+                        alert(`Linia ${i + 1}: alege materialul`);
+                        return;
+                    }
+                    if (!l.lungime || !l.latime) {
+                        alert(`Linia ${i + 1}: completează lungimea și lățimea`);
+                        return;
+                    }
+                    const [material, grosimeStr] = l.materialKey.split('||');
+                    liniiPayload.push({
+                        material,
+                        grosime: parseInt(grosimeStr, 10),
+                        lungime: parseFloat(l.lungime),
+                        latime: parseFloat(l.latime),
+                        cant: l.cant || null,
+                        cantSus: !!l.cantSus,
+                        cantJos: !!l.cantJos,
+                        cantStanga: !!l.cantStanga,
+                        cantDreapta: !!l.cantDreapta,
+                        coltSusStanga: !!l.coltSusStanga,
+                        coltSusDreapta: !!l.coltSusDreapta,
+                        coltJosStanga: !!l.coltJosStanga,
+                        coltJosDreapta: !!l.coltJosDreapta
+                    });
+                }
+
+                const payload = {
+                    client_id: parseInt(this.clientId, 10),
+                    observatii: this.observatii || '',
+                    linii: liniiPayload
+                };
+
+                this.saving = true;
+                try {
+                    const response = await fetch('/api/comenzi', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        alert('Eroare la salvare');
+                        this.saving = false;
+                        return;
+                    }
+                    const created = await response.json();
+                    if (created && created.id) {
+                        window.location.href = `/api/comenzi/${created.id}/detalii`;
+                    } else {
+                        window.location.href = '/api/comenzi/pagina';
+                    }
+                } catch (error) {
+                    alert('Eroare ' + error.message);
+                    this.saving = false;
+                }
+            }
+        };
+    }
+</script>
+
+</body>
+</html>

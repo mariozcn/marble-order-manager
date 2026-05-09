@@ -1,6 +1,7 @@
 package org.example.marmura_order_manager.controller;
 
 import org.example.marmura_order_manager.model.Status;
+import org.example.marmura_order_manager.service.ClientService;
 import org.example.marmura_order_manager.service.ComandaService;
 import org.example.marmura_order_manager.service.MaterialService;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ComandaViewController {
     private final ComandaService comandaService;
     private final MaterialService materialService;
+    private final ClientService clientService;
 
     @GetMapping("/{id}/detalii")
     public String detaliiComanda(@PathVariable Long id, Model model) {
@@ -26,9 +28,12 @@ public class ComandaViewController {
         return "redirect:/api/comenzi/" + id + "/detalii";
     }
 
-    public ComandaViewController(ComandaService comandaService, MaterialService materialService) {
+    public ComandaViewController(ComandaService comandaService,
+                                 MaterialService materialService,
+                                 ClientService clientService) {
         this.comandaService = comandaService;
         this.materialService = materialService;
+        this.clientService = clientService;
     }
 
     @GetMapping("/pagina")
@@ -36,5 +41,12 @@ public class ComandaViewController {
         model.addAttribute("comenzi", comandaService.getComenzi());
         model.addAttribute("materiale", materialService.getMaterials());
         return "comenzi";
+    }
+
+    @GetMapping("/comanda-noua")
+    public String comandaNouaPagina(Model model) {
+        model.addAttribute("clienti", clientService.totiClientii());
+        model.addAttribute("materiale", materialService.getMaterials());
+        return "comanda-noua";
     }
 }

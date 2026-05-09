@@ -4,6 +4,7 @@ package org.example.marmura_order_manager.controller;
 import org.example.marmura_order_manager.model.Client;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.model.LinieComanda;
+import org.example.marmura_order_manager.model.Status;
 import org.example.marmura_order_manager.service.ClientService;
 import org.example.marmura_order_manager.service.ComandaService;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,12 @@ public class ClientViewController {
         model.addAttribute("totalCheltuit", totalCheltuit);
 
         return "comenzi-client";
+    }
+
+    @PatchMapping("/{id}/status/{status}")
+    @ResponseBody
+    public void updateStatus(@PathVariable Long id, @PathVariable Status status) {
+        comandaService.updateComanda(id, status);
     }
 
 }

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    <title>Detalii Comanda</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<div class="max-w-7xl mx-auto px-6 py-8" x-data="{ modalOpen: false, comandaId: null }">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Detalii comanda</h1>
+    </div>
+
+</div>
+</body>
+</html>

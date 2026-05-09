@@ -51,4 +51,9 @@ public class ClientController {
         return clientService.salveazaClient(client);
     }
 
+
+    @PutMapping("/{id}")
+    public Client updateClient(@PathVariable Long id, @RequestBody Client client) {
+        return clientService.updateClient(id,client);
+    }
 }

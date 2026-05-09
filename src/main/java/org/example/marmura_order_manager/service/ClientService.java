@@ -44,5 +44,10 @@ public class ClientService {
         return clientRepository.findClientById(id);
     }
 
-
+    public Client updateClient(Long id,Client client){
+        Client existent = clientRepository.findById(id).orElseThrow();
+        existent.setName(client.getName());
+        existent.setTelefon(client.getTelefon());
+        return clientRepository.save(existent);
+    }
 }

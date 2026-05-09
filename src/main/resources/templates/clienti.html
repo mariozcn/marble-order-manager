@@ -14,7 +14,7 @@
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">Clienți</h1>
-        <button @click="modalOpen = true"
+        <button @click="modalOpen = true; openAdd()"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg">
             + Adaugă Client
         </button>
@@ -45,7 +45,11 @@
                 <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${client.name}"></td>
                 <td class="px-6 py-4 text-sm text-gray-600" th:text="${client.telefon}"></td>
                 <td class="px-6 py-4 text-sm">
-                    <button class="text-blue-600 hover:text-blue-800 mr-3">
+                    <button th:data-id="${client.id}"
+                            th:data-name="${client.name}"
+                            th:data-telefon="${client.telefon}"
+                            @click="modalOpen = true; openEdit($el)"
+                            class="text-blue-600 hover:text-blue-800 mr-3">
                         <i data-lucide="pencil" class="w-4 h-4"></i>
                     </button>
                     <button th:onclick="'deleteClient(' + ${client.id} + ')'"
@@ -69,26 +73,18 @@
 
         <div class="fixed inset-0 bg-black bg-opacity-50" @click="modalOpen = false"></div>
         <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4">Adaugă Client</h2>
+            <h2 id="modalTitle" class="text-xl font-bold text-gray-900 mb-4">Adaugă Client</h2>
 
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nume</label>
-                    <input type="text"
+                    <input type="text" id="inputNume"
                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 <div>
-                    <label class="block
-                    text-sm
-                    font-medium
-                    text-gray-700
-                    mb-1">Telefon</label>
-                    <input type="text"
-                           class="w-full
-                            px-3 py-2
-                            border border-gray-300
-                            rounded-lg focus:outline-none
-                             focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                    <input type="text" id="inputTelefon"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
             </div>
             <div class="flex justify-end space-x-3 mt-6">
@@ -96,7 +92,7 @@
                         class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50">
                     Anulează
                 </button>
-                <button onclick="adaugaClient()"
+                <button id="btnSalveaza" onclick="salveazaClient()"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg">
                     Creează
                 </button>
@@ -107,69 +103,86 @@
 
 <div th:replace="~{fragments/layout :: init-icons}"></div>
 
-
-
 <script>
-    async function adaugaClient(){
-        const inputs = document.querySelectorAll('#modal input');
-        const nume = inputs[0].value;
-        const telefon = inputs[1].value;
+    let editingId = null;
 
-        if(!nume||!telefon){
+    function openAdd() {
+        editingId = null;
+        document.getElementById('modalTitle').textContent = 'Adaugă Client';
+        document.getElementById('btnSalveaza').textContent = 'Creează';
+        document.getElementById('inputNume').value = '';
+        document.getElementById('inputTelefon').value = '';
+    }
+
+    function openEdit(btn) {
+        editingId = btn.dataset.id;
+        document.getElementById('modalTitle').textContent = 'Modifică Client';
+        document.getElementById('btnSalveaza').textContent = 'Salvează';
+        document.getElementById('inputNume').value = btn.dataset.name || '';
+        document.getElementById('inputTelefon').value = btn.dataset.telefon || '';
+    }
+
+    async function salveazaClient() {
+        const name = document.getElementById('inputNume').value.trim();
+        const telefon = document.getElementById('inputTelefon').value.trim();
+
+        if (!name || !telefon) {
             alert("Completeaza toate campurile!");
             return;
         }
 
-        try{
-            const response = await fetch('/api/clienti',{
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({name:nume, telefon:telefon})
+        const url = editingId ? `/api/clienti/${editingId}` : '/api/clienti';
+        const method = editingId ? 'PUT' : 'POST';
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, telefon })
             });
-            if(!response.ok){
-                throw new Error("eroare la salvare");
+            if (!response.ok) {
+                alert('Eroare la salvare');
+                return;
             }
             location.reload();
-        }catch (error){
-            alert('Eroare '+error.message);
+        } catch (error) {
+            alert('Eroare ' + error.message);
         }
     }
 
-    async function deleteClient(id){
+    async function deleteClient(id) {
         const confirmare = confirm("Esti sigur ca vrei sa stergi clientul?");
-        if(!confirmare){return;}
+        if (!confirmare) { return; }
 
-
-        try{
-            const response = await fetch('/api/clienti/' + id,{
-                method:'DELETE'
+        try {
+            const response = await fetch('/api/clienti/' + id, {
+                method: 'DELETE'
             });
-            if(!response.ok){
-                throw new Error("eroare la stergere");
+            if (!response.ok) {
+                alert('Eroare la stergere');
+                return;
             }
             location.reload();
-        }catch (error){
-            alert('Eroare ' +error.message);
+        } catch (error) {
+            alert('Eroare ' + error.message);
         }
     }
 
-    function cautaClienti(){
+    function cautaClienti() {
         const textCautat = document.getElementById('searchInput').value.toLowerCase();
-        const randuri = document.querySelectorAll('#tabelClienti tr')
+        const randuri = document.querySelectorAll('#tabelClienti tr');
 
         randuri.forEach(rand => {
             const nume = rand.cells[0].textContent.toLowerCase();
             const telefon = rand.cells[1].textContent.toLowerCase();
 
-            if(nume.includes(textCautat) || telefon.includes(textCautat)){
-                rand.style.display='';
-            }else{
-                rand.style.display='none';
+            if (nume.includes(textCautat) || telefon.includes(textCautat)) {
+                rand.style.display = '';
+            } else {
+                rand.style.display = 'none';
             }
         });
     }
-
-
 </script>
 
 </body>

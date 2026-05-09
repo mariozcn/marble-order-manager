@@ -26,4 +26,14 @@ public class MaterialService {
         materialRepository.deleteById(id);
     }
 
+    public Material updateMaterial(Long id, Material material) {
+        Material existent = materialRepository.findById(id).orElseThrow();
+        existent.setName(material.getName());
+        existent.setOrigine(material.getOrigine());
+        existent.setPret(material.getPret());
+        existent.setGrosime(material.getGrosime());
+        existent.setTipMaterial(material.getTipMaterial());
+
+        return materialRepository.save(existent);
+    }
 }

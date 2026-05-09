@@ -28,4 +28,10 @@ public class MaterialController {
     public MaterialController(MaterialService materialService) {
         this.materialService = materialService;
     }
+
+    @PutMapping("/{id}")
+    public Material updateMaterial(@PathVariable Long id, @RequestBody Material material){
+        return materialService.updateMaterial(id,material);
+    }
+
 }

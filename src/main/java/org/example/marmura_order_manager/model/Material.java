@@ -22,6 +22,9 @@ public class Material {
     @Column(name="grosime")
     private int grosime;
 
+    @Column(name="origine")
+    private String origine;
+
     public Material() {
     }
 
@@ -65,11 +68,20 @@ public class Material {
         this.grosime = grosime;
     }
 
-    public Material(Long id, TIP_MATERIAL tipMaterial, String name, double pret, int grosime) {
+    public String getOrigine() {
+        return origine;
+    }
+
+    public void setOrigine(String origine) {
+        this.origine = origine;
+    }
+
+    public Material(Long id, TIP_MATERIAL tipMaterial, String name, double pret, int grosime, String origine) {
         this.id = id;
         this.tipMaterial = tipMaterial;
         this.name = name;
         this.pret = pret;
         this.grosime = grosime;
+        this.origine = origine;
     }
 }

@@ -1,48 +1,176 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Marble Order Manager</title>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clienți</title>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
 </head>
-<body>
-<nav class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand">🪨 Marble Manager</span>
-    <div>
-        <a href="/api/clienti/pagina" class="btn btn-outline-light btn-sm me-2">Clienți</a>
-        <a href="/api/comenzi/pagina" class="btn btn-outline-light btn-sm me-2">Comenzi</a>
-        <a href="/api/materiale/pagina" class="btn btn-outline-light btn-sm">Materiale</a>
-    </div>
-</nav>
+<body class="bg-gray-50 min-h-screen">
 
-<div class="container mt-4">
-    <h2>Clienți</h2>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Nume</th>
-            <th>Telefon</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="client : ${clienti}">
-            <td th:text="${client.name}"></td>
-            <td th:text="${client.telefon}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <h4 class="mt-4">Adaugă Client Nou</h4>
-    <form action="/api/clienti/adauga" method="post">
-        <div class="mb-3">
-            <label>Nume</label>
-            <input type="text" name="name" class="form-control" required>
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<div class="max-w-7xl mx-auto px-6 py-8" x-data="{ modalOpen: false }">
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Clienți</h1>
+        <button @click="modalOpen = true"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg">
+            + Adaugă Client
+        </button>
+    </div>
+
+    <div class="bg-white rounded-lg shadow mb-4 p-4">
+        <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+            <input type="text"
+                   id="searchInput"
+                   oninput="cautaClienti()"
+                   placeholder="Caută după nume sau telefon..."
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
-        <div class="mb-3">
-            <label>Telefon</label>
-            <input type="text" name="telefon" class="form-control" required>
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nume</th>
+                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody id="tabelClienti" class="divide-y divide-gray-200">
+            <tr th:each="client : ${clienti}" class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900" th:text="${client.name}"></td>
+                <td class="px-6 py-4 text-sm text-gray-600" th:text="${client.telefon}"></td>
+                <td class="px-6 py-4 text-sm">
+                    <button class="text-blue-600 hover:text-blue-800 mr-3">
+                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                    </button>
+                    <button th:onclick="'deleteClient(' + ${client.id} + ')'"
+                            class="text-red-600 hover:text-red-800 mr-3">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                    <a th:href="@{/api/clienti/{id}/comenzi-pagina(id=${client.id})}"
+                       class="text-gray-600 hover:text-gray-900 mr-3 inline-block">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div x-show="modalOpen"
+         x-cloak
+         id="modal"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+        <div class="fixed inset-0 bg-black bg-opacity-50" @click="modalOpen = false"></div>
+        <div class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">Adaugă Client</h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nume</label>
+                    <input type="text"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label class="block
+                    text-sm
+                    font-medium
+                    text-gray-700
+                    mb-1">Telefon</label>
+                    <input type="text"
+                           class="w-full
+                            px-3 py-2
+                            border border-gray-300
+                            rounded-lg focus:outline-none
+                             focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-6">
+                <button @click="modalOpen = false"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50">
+                    Anulează
+                </button>
+                <button onclick="adaugaClient()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg">
+                    Creează
+                </button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Adauga</button>
-    </form>
+    </div>
 </div>
+
+<div th:replace="~{fragments/layout :: init-icons}"></div>
+
+
+
+<script>
+    async function adaugaClient(){
+        const inputs = document.querySelectorAll('#modal input');
+        const nume = inputs[0].value;
+        const telefon = inputs[1].value;
+
+        if(!nume||!telefon){
+            alert("Completeaza toate campurile!");
+            return;
+        }
+
+        try{
+            const response = await fetch('/api/clienti',{
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({name:nume, telefon:telefon})
+            });
+            if(!response.ok){
+                throw new Error("eroare la salvare");
+            }
+            location.reload();
+        }catch (error){
+            alert('Eroare '+error.message);
+        }
+    }
+
+    async function deleteClient(id){
+        const confirmare = confirm("Esti sigur ca vrei sa stergi clientul?");
+        if(!confirmare){return;}
+
+
+        try{
+            const response = await fetch('/api/clienti/' + id,{
+                method:'DELETE'
+            });
+            if(!response.ok){
+                throw new Error("eroare la stergere");
+            }
+            location.reload();
+        }catch (error){
+            alert('Eroare ' +error.message);
+        }
+    }
+
+    function cautaClienti(){
+        const textCautat = document.getElementById('searchInput').value.toLowerCase();
+        const randuri = document.querySelectorAll('#tabelClienti tr')
+
+        randuri.forEach(rand => {
+            const nume = rand.cells[0].textContent.toLowerCase();
+            const telefon = rand.cells[1].textContent.toLowerCase();
+
+            if(nume.includes(textCautat) || telefon.includes(textCautat)){
+                rand.style.display='';
+            }else{
+                rand.style.display='none';
+            }
+        });
+    }
+
+
+</script>
+
 </body>
 </html>

@@ -72,13 +72,20 @@ public class Comanda {
         return observatii;
     }
 
-    public Comanda(Long id,Status status, Client client, String observatii) {
+    public Comanda(Long id, LocalDate dataComenzii, List<LinieComanda> linii, Status status, Client client, String observatii) {
         this.id = id;
-        this.dataComenzii = LocalDate.now();
+        this.dataComenzii = dataComenzii;
+        this.linii = linii;
         this.status = status;
         this.client = client;
         this.observatii = observatii;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
     public void setLinii(List<LinieComanda> linii) {
         this.linii = linii;
     }

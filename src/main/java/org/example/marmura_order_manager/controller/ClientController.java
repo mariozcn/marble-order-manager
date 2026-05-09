@@ -44,6 +44,8 @@ public class ClientController {
         clientService.deleteClient(id);
     }
 
+
+    //post
     @PostMapping
     public Client adaugaClient(@RequestBody Client client){
         return clientService.salveazaClient(client);

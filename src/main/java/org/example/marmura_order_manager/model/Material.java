@@ -25,7 +25,6 @@ public class Material {
     @Column(name="origine")
     private String origine;
 
-
     public Material() {
     }
 

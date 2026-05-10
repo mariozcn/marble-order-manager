@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ClientService {
@@ -41,7 +42,8 @@ public class ClientService {
     }
 
     public Client getClientById(Long id){
-        return clientRepository.findClientById(id);
+        return clientRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Clientul cu id " + id + " " +
+                "nu exista"));
     }
 
     public Client updateClient(Long id,Client client){

@@ -32,6 +32,11 @@ public class ClientController {
         return comandaService.getComenziByClient(id);
     }
 
+    @GetMapping("/{id}")
+    public Client getClientById(@PathVariable Long id){
+        return clientService.getClientById(id);
+    }
+
     @GetMapping("/cauta")
     @ResponseBody
     public List<Client> cautaClienti(@RequestParam String query){

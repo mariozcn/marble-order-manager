@@ -141,7 +141,14 @@
                 body: JSON.stringify({ name, telefon })
             });
             if (!response.ok) {
-                alert('Eroare la salvare');
+                const errorData = await response.json();
+                if(errorData.errors){
+                    const message = Object.values(errorData.errors).join('\n');
+                    alert(message);
+                }else{
+                    alert('Eroare: '+(errorData.message || 'eroare necunoscuta'));
+                }
+
                 return;
             }
             location.reload();

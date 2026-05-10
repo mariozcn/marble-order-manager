@@ -1,5 +1,6 @@
 package org.example.marmura_order_manager.controller;
 
+import jakarta.validation.Valid;
 import org.example.marmura_order_manager.model.Client;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.service.ClientService;
@@ -52,7 +53,7 @@ public class ClientController {
 
     //post
     @PostMapping
-    public Client adaugaClient(@RequestBody Client client){
+    public Client adaugaClient(@Valid @RequestBody Client client){
         return clientService.salveazaClient(client);
     }
 

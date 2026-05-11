@@ -24,6 +24,7 @@ public class DataInitializer {
                 User user = new User();
                 user.setUsername("admin");
                 user.setPassword(passwordEncoder.encode(adminPassword));
+                user.setRole("ADMIN");
                 userRepository.save(user);
                 System.out.println("User admin created");
             }
@@ -31,10 +32,14 @@ public class DataInitializer {
             if(userRepository.findByUsername("demo").isEmpty()){
                 User demo = new User();
                 demo.setUsername("demo");
+                demo.setRole("DEMO");
                 demo.setPassword(passwordEncoder.encode(demoPassword));
                 userRepository.save(demo);
             }
         };
     }
+
+
+
 
 }

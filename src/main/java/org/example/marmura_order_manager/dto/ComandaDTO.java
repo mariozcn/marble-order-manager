@@ -1,11 +1,22 @@
 package org.example.marmura_order_manager.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class ComandaDTO {
+    @NotNull(message = "Clientul este obligatoriu")
     private Long client_id;
+
+    @Valid
+    @NotEmpty(message = "Macar o linie de comanda obligatorie")
     private List<LinieComandaDTO> linii;
+
     private String observatii;
+
     public ComandaDTO() {
     }
 

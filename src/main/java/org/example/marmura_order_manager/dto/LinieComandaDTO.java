@@ -1,10 +1,24 @@
 package org.example.marmura_order_manager.dto;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class LinieComandaDTO {
+    @NotNull(message = "Cantul este obligatoriu")
     private TIP_CANT cant;
+
+    @Min(value = 1, message = "Grosimea trebuie sa fie cel putin 1")
     private int grosime;
+
+    @DecimalMin(value = "0.0", message = "Latimea nu poate fi negativa")
     private double latime;
+
+    @DecimalMin(value = "0.0", message = "Lungimea nu poate fi negativa")
     private double lungime;
+
+    @NotBlank(message = "Materialul este obligatoriu")
     private String material;
 
     //laturi

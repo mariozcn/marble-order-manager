@@ -1,5 +1,6 @@
 package org.example.marmura_order_manager.controller;
 
+import jakarta.validation.Valid;
 import org.example.marmura_order_manager.dto.ComandaDTO;
 import org.example.marmura_order_manager.model.Comanda;
 import org.example.marmura_order_manager.model.Status;
@@ -15,7 +16,7 @@ public class ComandaController {
     private final ComandaService comandaService;
 
     @PostMapping
-    public Comanda postComanda(@RequestBody ComandaDTO comanda){
+    public Comanda postComanda(@Valid @RequestBody ComandaDTO comanda){
         return comandaService.creareComanda(comanda);
     }
 

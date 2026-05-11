@@ -7,6 +7,8 @@ import org.example.marmura_order_manager.repository.ClientRepository;
 import org.example.marmura_order_manager.repository.ComandaRepository;
 import org.example.marmura_order_manager.repository.LinieComandaRepository;
 import org.example.marmura_order_manager.repository.MaterialRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class ComandaService {
+    private final static Logger log = LoggerFactory.getLogger(ComandaService.class);
+
     private final ClientRepository clientRepository;
     private final ComandaRepository comandaRepository;
     private final LinieComandaRepository linieComandaRepository;
@@ -26,11 +30,14 @@ public class ComandaService {
         Material material = materialRepository.findByNameAndGrosime(linieComandaDTO.getMaterial(),
                 linieComandaDTO.getGrosime()).orElseThrow();
 
+        log.info("Calculating price for material: {}",material.getName());
+
         double suprafata = (linieComandaDTO.getLungime() * linieComandaDTO.getLatime()) /10000.0;
         return suprafata * material.getPret();
     }
 
     public double calculPretCant(LinieComandaDTO linieComandaDTO){
+        log.info("Calculating edge finishing price: {}",linieComandaDTO.getCant());
         double suprafata = 0;
         if(linieComandaDTO.isCantStanga())  suprafata += linieComandaDTO.getLatime()   / 100.0;
         if(linieComandaDTO.isCantDreapta()) suprafata += linieComandaDTO.getLatime()   / 100.0;
@@ -40,10 +47,12 @@ public class ComandaService {
     }
 
     public Comanda getComandaById(Long id){
+        log.info("Searching for order with id: {}",id);
         return comandaRepository.findById(id).orElseThrow();
     }
 
     public Comanda updateComanda(Long id, Status status){
+        log.info("Changing order {} status to {}",id,status);
         Comanda comanda = comandaRepository.findById(id).orElseThrow();
         comanda.setStatus(status);
         return comandaRepository.save(comanda);
@@ -51,6 +60,7 @@ public class ComandaService {
 
     @Transactional
     public Comanda creareComanda(ComandaDTO comandaDTO){
+        log.info("Creating order for client with id: {}",comandaDTO.getClient_id());
         Comanda comanda = new Comanda();
         comanda.setObservatii(comandaDTO.getObservatii());
         comanda.setStatus(Status.Noua);
@@ -83,15 +93,19 @@ public class ComandaService {
         }
 
         comanda.setLinii(linii);
+        log.info("Order created with id: {}",comanda.getId());
         return comanda;
     }
 
     public List<Comanda> getComenziByClient(Long id){
         Client client = clientRepository.findById(id).orElseThrow();
+        log.info("Searching for client's order with id: {}",client.getId());
+
         return comandaRepository.findComandaByClient(client);
     }
 
     public List<Comanda> getComenzi(){
+        log.info("Searching for all orders");
         return comandaRepository.findAll();
     }
 

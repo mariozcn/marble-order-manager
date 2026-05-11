@@ -2,6 +2,8 @@ package org.example.marmura_order_manager.config;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
@@ -16,8 +18,13 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private final static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Map<String,Object>> handleNotFound(NoSuchElementException ex){
+        log.warn("Resource not found: {}",ex.getMessage());
+
         Map<String,Object> error = Map.of(
                 "status",404,
         "error","Resursa nu a fost gasita","message",ex.getMessage()
@@ -28,6 +35,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String,Object>> handleBadRequest(IllegalArgumentException ex){
+        log.warn("Invalid request: {}",ex.getMessage());
         Map<String,Object> error = Map.of(
                 "status",400,
                 "error", "cerere invalida",
@@ -38,6 +46,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String,Object>> handleServerError(Exception ex){
+        log.warn("Server error: {}",ex.getMessage());
         Map<String,Object> error = Map.of(
                 "status",500,
                 "error","server error",
@@ -49,6 +58,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Map<String, Object>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex){
+        log.warn("Method not allowed: {}",ex.getMessage());
         Map<String,Object> error = Map.of(
                 "status",405,
                 "error","method now allowed",
@@ -60,6 +70,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String,Object>> handleValidation(MethodArgumentNotValidException ex){
+        log.warn("Invalid data: {}",ex.getMessage());
+
         Map<String,Object> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->errors.put(error.getField(), error.getDefaultMessage()));
 

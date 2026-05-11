@@ -2,6 +2,7 @@ package org.example.marmura_order_manager.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Material {
@@ -13,9 +14,11 @@ public class Material {
     @Enumerated(EnumType.STRING)
     private TIP_MATERIAL tipMaterial;
 
+    @NotBlank(message = "Numele este obligatoriu")
     @Column(name="name")
     private String name;
 
+    @NotBlank(message = "Pretul este obligatoriu")
     @Column(name="pret")
     private double pret;
 

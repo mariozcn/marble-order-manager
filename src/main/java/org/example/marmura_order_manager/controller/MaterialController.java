@@ -1,5 +1,6 @@
 package org.example.marmura_order_manager.controller;
 
+import jakarta.validation.Valid;
 import org.example.marmura_order_manager.model.Material;
 import org.example.marmura_order_manager.service.MaterialService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class MaterialController {
     }
 
     @PostMapping
-    public Material postMaterial(@RequestBody Material material){
+    public Material postMaterial(@Valid @RequestBody Material material){
         return materialService.createMaterial(material);
     }
 

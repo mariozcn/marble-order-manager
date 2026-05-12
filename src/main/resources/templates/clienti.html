@@ -142,6 +142,8 @@
             });
             if (!response.ok) {
                 const errorData = await response.json();
+                console.log('Status:', response.status);
+                console.log('Error:', errorData);
                 if(errorData.errors){
                     const message = Object.values(errorData.errors).join('\n');
                     alert(message);

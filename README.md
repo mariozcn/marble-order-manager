@@ -7,7 +7,7 @@
 
 > Production web application replacing handwritten paper orders for a real marble & granite workshop. Built and deployed solo, used daily.
 
-**Live demo:** [oction.up.railway.app/dashboard](https://oction.up.railway.app/dashboard)
+**Live demo:** [oction.up.railway.app](https://oction.up.railway.app)
 
 **Demo credentials** — username: `demo` · password: `demo123`
 

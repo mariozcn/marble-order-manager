@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ClientServiceTest {
@@ -26,6 +26,43 @@ public class ClientServiceTest {
 
 
         clientService = new ClientService(clientRepository,comandaRepository);
+    }
+
+    @Test
+    void getAllClients(){
+        Client c1 = new Client();
+        Client c2 = new Client();
+        Client c3 = new Client();
+        Client c4 = new Client();
+
+        c1.setName("t1");
+        c2.setName("t2");
+        c3.setName("t3");
+        c4.setName("t4");
+
+        when(clientRepository.findAll()).thenReturn(List.of(c1,c2,c3,c4));
+
+        List<Client> result = clientService.totiClientii();
+
+        assertEquals(4,result.size());
+        assertEquals("t1",result.get(0).getName());
+        assertEquals("t2",result.get(1).getName());
+        assertEquals("t3",result.get(2).getName());
+        assertEquals("t4",result.get(3).getName());
+    }
+
+
+    @Test
+    void createClient_shouldSaveAndReturnClient(){
+        Client client = new Client();
+        client.setName("Test");
+        client.setTelefon("07777777");
+
+        when(clientRepository.save(any(Client.class))).thenReturn(client);
+        Client rezultat = clientService.salveazaClient(client);
+
+        assertEquals("Test",rezultat.getName());
+        assertEquals("07777777",rezultat.getTelefon());
     }
 
     @Test

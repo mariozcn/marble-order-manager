@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/api/**")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login","/css/**","/js/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/","/login","/css/**","/js/**","/images/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/api/**").hasRole("ADMIN")

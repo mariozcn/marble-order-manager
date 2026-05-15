@@ -14,6 +14,12 @@ public class MaterialService {
         return materialRepository.findAll();
     }
 
+    public Material getMaterialById(Long id){
+        Material material = materialRepository.findById(id).orElseThrow(() -> new RuntimeException("Material not found with id: "+ id));
+
+        return material;
+    }
+
     public Material createMaterial(Material material){
         return materialRepository.save(material);
     }
